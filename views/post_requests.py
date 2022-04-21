@@ -2,6 +2,8 @@ import sqlite3
 import json
 from datetime import datetime
 from models.post import Post
+from models.category import Category
+from models.user import User
 
 
 def get_all_posts():
@@ -20,15 +22,21 @@ def get_all_posts():
         # Join tables Users and Categories
         db_cursor.execute("""
             SELECT
-              id,
-              user_id,
-              category_id,
-              title,
-              publication_date,
-              image_url,
-              content,
-              approved
-            FROM Posts
+                p.id,
+                p.user_id,
+                p.category_id,
+                p.title,
+                p.publication_date,
+                p.image_url,
+                p.content,
+                p.approved
+                c.label category_label
+                u.first_name 
+            FROM Posts p
+            JOIN Categories c
+                ON c.id = p.category_id
+            JOIN Users u
+                ON u.id = p.user_id
         """,)
 
         posts = []
@@ -48,6 +56,52 @@ def get_all_posts():
                 row['approved']
             )
 
+            category = Category(
+                row['id'],
+                row['label']
+            )
+
+            user = User(
+                row['id'],
+                row['first_name'],
+                row['last_name'],
+                row['email'],
+                row['bio'],
+                row['username'],
+                row['password'],
+                row['profile_image_url'],
+                row['created_on'],
+                row['active']
+            )
+
+            post.category = category.__dict__
+
+            post.user = user.__dict__
+
+            # TAG CODE
+            # db_cursor.execute("""
+            # SELECT
+            #     t.id,
+            #     t.name
+            # FROM Entry e
+            # JOIN Entrytags et
+            #     ON e.id = et.entry_id
+            # JOIN Tags t
+            #     ON t.id = et.tag_id
+            # WHERE e.id = ?
+            # """, (entry.id, )
+            # )
+
+            # tag_list = db_cursor.fetchall()
+
+            # for et_row in tag_list:
+            #     tag = Tag(
+            #         et_row['id'],
+            #         et_row['name']
+            #     )
+
+            #     entry.tags.append(tag.__dict__)
+
             # Store Category Class and User Class with
             # relevant rows of keys
 
@@ -58,34 +112,36 @@ def get_all_posts():
     return json.dumps(posts)
 
 # function to get posts by single user
-def get_posts_by_user_id(user_id):
-    """
-    get list of posts by a single user
 
-    Args:
-        user_id (int): user id of the author
 
-    Returns:
-        list: list of the posts by the specified user
-    """
-    with sqlite3.connect('./db.sqlite3') as conn:
-        conn.row_factory = sqlite3.Row
-        db_cursor = conn.cursor()
-        # sql query
-            # select desired columns
-            # from posts
-            # where posts.user_id = ? # interpolate user_id argument
-            
-        # declare empty list for posts
-        posts = []
-        
-        # get dataset from db_cursor
-        
-        # iterate over dataset
-            # for each one make into a Post() object
-            # append post.__dict__ to posts
-    
-    return json.dumps(posts)
+# def get_posts_by_user_id(user_id):
+#     """
+#     get list of posts by a single user
+
+#     Args:
+#         user_id (int): user id of the author
+
+#     Returns:
+#         list: list of the posts by the specified user
+#     """
+#     with sqlite3.connect('./db.sqlite3') as conn:
+#         conn.row_factory = sqlite3.Row
+#         db_cursor = conn.cursor()
+#         # sql query
+#         # select desired columns
+#         # from posts
+#         # where posts.user_id = ? # interpolate user_id argument
+
+#         # declare empty list for posts
+#         posts = []
+
+#         # get dataset from db_cursor
+
+#         # iterate over dataset
+#         # for each one make into a Post() object
+#         # append post.__dict__ to posts
+
+#     return json.dumps(posts)
 
 # define function to get a single post, this will
 # take need a parameter to take a post UID later
