@@ -89,6 +89,9 @@ class HandleRequests(BaseHTTPRequestHandler):
                 else:
                     response = f"{get_all_posts()}"
 
+                    # add in an elif statement for if resource == "tags"
+                    # to get_all_tags()
+
             # if resource == "moods":
             #     response = f"{get_all_moods()}"
 
