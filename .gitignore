@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# ignore vscode folder so teammates can have own settings
+.vscode/
+
 # Distribution / packaging
 .Python
 build/

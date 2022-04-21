@@ -57,6 +57,36 @@ def get_all_posts():
             posts.append(post.__dict__)
     return json.dumps(posts)
 
+# function to get posts by single user
+def get_posts_by_user_id(user_id):
+    """
+    get list of posts by a single user
+
+    Args:
+        user_id (int): user id of the author
+
+    Returns:
+        list: list of the posts by the specified user
+    """
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        # sql query
+            # select desired columns
+            # from posts
+            # where posts.user_id = ? # interpolate user_id argument
+            
+        # declare empty list for posts
+        posts = []
+        
+        # get dataset from db_cursor
+        
+        # iterate over dataset
+            # for each one make into a Post() object
+            # append post.__dict__ to posts
+    
+    return json.dumps(posts)
+
 # define function to get a single post, this will
 # take need a parameter to take a post UID later
 

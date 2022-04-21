@@ -69,3 +69,27 @@ def create_user(user):
             'token': id,
             'valid': True
         })
+
+
+def get_all_users():
+    """
+    get all users in database
+    """
+    # set up sqlite3 connection to database
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        
+        # db_cursor.execute sqlite3 SELECT query
+            # select 
+                # list out the user column headers
+            # from users s
+        # no filtering needed
+    
+        # initialize empty list for users
+        users = []
+        # iterate over dataset from execute query
+            # append the data as a User object to the new list
+    
+    # return new list
+    return json.dumps(users)
