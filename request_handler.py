@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import sqlite3
 from views.post_requests import get_all_posts
+from views.user_requests import get_all_users
 
 from views.user_requests import create_user, login_user
 
@@ -121,7 +122,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
 
             # write a new if statement for if resource = "tags"
-                # new_tag = create_new_tag(post_body)
+            # new_tag = create_new_tag(post_body)
 
         self.wfile.write(response.encode())
 
