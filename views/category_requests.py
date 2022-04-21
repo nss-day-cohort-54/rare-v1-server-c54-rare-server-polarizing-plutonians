@@ -16,17 +16,42 @@
 
 
 
-# def a delete category function
+# def a DELETE category function
 
 # connect to database
 # write sql query to delete a single category instance
 
 
-# def a edit or update category function
+
+
+# def a EDIT or UPDATE category function
 
 # connect to database
 # write sql query to update/edit a single category instance
 # check if rows are affected to force the appropriate fetch response(204/404)
+
+
+
+# define a function create_category
+# takes one parameter (new_category)
+
+
+    # connect to the database
+
+    # set db_cursor equal to conn.cursor() 
+
+    # write sql query which inserts into the "Categories" table, (label) 
+# VALUES 
+    # add one binding ? for the incoming value, 
+        # (new_category)['label']
+    
+    # set the id equal to the last row id 
+        # (id = db_cursor.lastrowid)
+        
+    # add that id property to the new category dictionary
+        # new_category['id'] = id
+
+        # return json.dumps(new_category) 
 
 
 
