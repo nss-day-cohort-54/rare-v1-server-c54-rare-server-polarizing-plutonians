@@ -87,3 +87,19 @@ CREATE TABLE "Categories" (
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Posts VALUES (null, 1, 1, 'Noob', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1)
+
+
+
+SELECT
+  id,
+  user_id,
+  category_id,
+  title,
+  publication_date,
+  image_url,
+  content,
+  approved
+FROM Posts
+
+DROP TABLE Posts
