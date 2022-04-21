@@ -4,7 +4,7 @@ from datetime import datetime
 from models.post import Post
 
 
-def get_all_posts(user):
+def get_all_posts():
     """Checks for the user in the database
 
     Args:
