@@ -120,6 +120,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'register':
             response = create_user(post_body)
 
+            # write a new if statement for if resource = "tags"
+                # new_tag = create_new_tag(post_body)
+
         self.wfile.write(response.encode())
 
     def do_PUT(self):
