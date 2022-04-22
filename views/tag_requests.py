@@ -59,5 +59,6 @@ def create_new_tag(new_tag):
     # add one binding ? for the incoming value, 
         # (new_tag)['label']
         id = db_cursor.lastrowid
+        new_tag["id"] = id
         # return json.dumps(new_tag)
     return json.dumps(new_tag)
