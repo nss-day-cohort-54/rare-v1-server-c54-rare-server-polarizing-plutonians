@@ -262,3 +262,43 @@ def get_posts_by_filter(url_dict):
         # Where tags.label like ?
 
     return ""
+
+
+
+
+
+
+
+# define function to create post
+
+    # connect to db and store in conn
+    # use rows
+    # use cursor method on conn and store in db_cursor
+    
+# Write SQL Query to INSERT VALUES into Posts Table
+
+    # Example :
+    
+    # db_cursor.execute("""
+    #     INSERT INTO Posts
+    #         (  user_id, category_id, title, publication_date,
+    #           image_url, content, approved)
+    #     VALUES
+    #         ( ?, ?, ?, ?, ?, ?, ?);
+    #     """, (new_post['userId'], new_post['categoryId'],
+    #           new_post['title'], new_post['publicationDate'],
+    #           new_post['imageUrl'], new_post['content'], new_post['approved'] ))
+
+# Set the id of the new post equal to the last row id
+# of the cursor 
+    
+    # Ex: id = db_cursor.lastrowid
+
+# Add the id to the post dictionary 
+
+    # Ex: new_post['id'] = id
+    
+# Convert the data into JSON
+
+    #Ex: return json.dumps(new_post)
+
