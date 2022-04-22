@@ -240,7 +240,7 @@ def get_posts_by_filter(url_dict):
     # db_cursor.execute(sqlstmt)
     # sgl query
         # mostly copies from get all posts to get posts
-        # with category, user, title, tag embeded
+        # with category, user, title, tag embedded
         # select *whatever columns we need*
         # from posts
         # join categories
@@ -251,14 +251,14 @@ def get_posts_by_filter(url_dict):
             # OR users.first_name LIKE
             # OR users.last_name LIKE
             # OR users.username LIKE
-    
-    
+
+
     # sql query searching tags
         # select columns
         # from posttags
         # join posts
         # join tags
-        
+
         # Where tags.label like ?
-    
+
     return ""
