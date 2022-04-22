@@ -29,15 +29,24 @@ def get_all_posts():
                 p.publication_date,
                 p.image_url,
                 p.content,
-                p.approved
-                c.label category_label
-                u.first_name 
+                p.approved,
+                c.id category_id,
+                c.label category_label,
+                u.first_name,
+                u.last_name,
+                u.email,
+                u.bio,
+                u.username,
+                u.password,
+                u.profile_image_url,
+                u.created_on,
+                u.active
             FROM Posts p
             JOIN Categories c
                 ON c.id = p.category_id
             JOIN Users u
                 ON u.id = p.user_id
-        """,)
+        """)
 
         posts = []
 
@@ -57,12 +66,12 @@ def get_all_posts():
             )
 
             category = Category(
-                row['id'],
-                row['label']
+                row['category_id'],
+                row['category_label']
             )
 
             user = User(
-                row['id'],
+                row['user_id'],
                 row['first_name'],
                 row['last_name'],
                 row['email'],
