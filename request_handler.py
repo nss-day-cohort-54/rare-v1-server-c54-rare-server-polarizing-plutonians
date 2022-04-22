@@ -3,7 +3,7 @@ import json
 
 from views.post_requests import get_all_posts
 from views import get_all_users
-from views import get_all_tags
+from views import get_all_tags, create_new_tag
 
 from views.user_requests import create_user, login_user
 
@@ -126,6 +126,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'tags':
+                response = create_new_tag(post_body)
 
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
