@@ -3,6 +3,7 @@ import json
 
 from views.post_requests import get_all_posts
 from views import get_all_users
+from views import get_all_tags
 
 from views.user_requests import create_user, login_user
 
