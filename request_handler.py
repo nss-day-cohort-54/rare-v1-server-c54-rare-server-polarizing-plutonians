@@ -96,8 +96,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             # if resource == "moods":
             #     response = f"{get_all_moods()}"
 
-            # if resource == "tags":
-            #     response = f"{get_all_tags()}"
+            if resource == "tags":
+                response = f"{get_all_tags()}"
 
         # elif len(parsed) == 3:
         #     (resource, key, value) = parsed
