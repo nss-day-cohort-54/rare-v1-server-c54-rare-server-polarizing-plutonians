@@ -157,3 +157,16 @@ SELECT
   u.email
 FROM users u
 ORDER BY u.username ASC
+
+SELECT
+    u.id,
+    u.username,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.bio,
+    u.profile_image_url,
+    u.created_on,
+    u.active
+FROM users u
+WHERE u.id = ?
