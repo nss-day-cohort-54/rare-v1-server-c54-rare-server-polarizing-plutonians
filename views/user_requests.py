@@ -2,6 +2,8 @@ import sqlite3
 import json
 from datetime import datetime
 
+from models.user import User
+
 def login_user(user):
     """Checks for the user in the database
 
@@ -9,7 +11,8 @@ def login_user(user):
         user (dict): Contains the username and password of the user trying to login
 
     Returns:
-        json string: If the user was found will return valid boolean of True and the user's id as the token
+        json string: If the user was found will return valid boolean of True
+                        and the user's id as the token
                      If the user was not found will return valid boolean False
     """
     with sqlite3.connect('./db.sqlite3') as conn:
@@ -79,17 +82,36 @@ def get_all_users():
     with sqlite3.connect('./db.sqlite3') as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        
+
         # db_cursor.execute sqlite3 SELECT query
-            # select 
+            # select
                 # list out the user column headers
+                # need first and last name, username, and email for issue #40
             # from users s
         # no filtering needed
-    
+        db_cursor.execute("""
+            SELECT
+                u.id,
+                u.username,
+                u.first_name,
+                u.last_name,
+                u.email,
+                u.bio
+            FROM users u
+            ORDER BY u.username ASC
+        """)
+
+        dataset = db_cursor.fetchall()
+
         # initialize empty list for users
         users = []
+
         # iterate over dataset from execute query
+        for row in dataset:
             # append the data as a User object to the new list
-    
+            user = User(row["id"],row["first_name"], row["last_name"],
+                        row["email"], row["bio"], row["username"], "", "", "", "")
+            users.append(user.__dict__)
+
     # return new list
     return json.dumps(users)
