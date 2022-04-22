@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-import sqlite3
+
 from views.post_requests import get_all_posts
-from views.user_requests import get_all_users
+from views import get_all_users
 
 from views.user_requests import create_user, login_user
 
@@ -89,6 +89,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass  # response = f"{get_single_entry(id)}"
                 else:
                     response = f"{get_all_posts()}"
+            elif resource == "users":
+                if id is not None:
+                    pass  # response = f"{get_single_entry(id)}"
+                else:
+                    response = f"{get_all_users()}"
 
                     # add in an elif statement for if resource == "tags"
                     # to get_all_tags()
