@@ -86,9 +86,14 @@ CREATE TABLE "Categories" (
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
+INSERT INTO Tags ('label') VALUES ('Python');
+INSERT INTO Tags ('label') VALUES ('React');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
-INSERT INTO Posts VALUES (null, 1, 1, 'Noob', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1)
-
+INSERT INTO Posts VALUES (null, 1, 1, 'Noob 2', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1)
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES (1, 1);
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES (1, 2);
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES (2, 2);
+INSERT INTO PostTags ('post_id', 'tag_id') VALUES (2, 3);
 
 
 SELECT
@@ -102,4 +107,36 @@ SELECT
   approved
 FROM Posts
 
-DROP TABLE Posts
+-- DROP TABLE Posts
+
+SELECT
+  p.id,
+  p.user_id,
+  p.category_id,
+  p.title,
+  p.publication_date,
+  p.image_url,
+  p.content,
+  p.approved,
+  c.label category_label,
+  u.first_name,
+  t.label
+FROM PostTags pt
+JOIN Posts p
+  ON p.id = pt.post_id
+JOIN Tags t
+  ON t.id = pt.tag_id
+JOIN Categories c
+  ON c.id = p.category_id
+JOIN Users u
+  ON u.id = p.user_id
+WHERE t.label LIKE "%py%"
+
+
+SELECT
+
+FROM Posts p
+JOIN Categories c
+  ON c.id = p.category_id
+JOIN Users u
+  ON u.id = p.user_id

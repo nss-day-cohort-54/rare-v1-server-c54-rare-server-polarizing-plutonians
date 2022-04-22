@@ -213,7 +213,16 @@ def get_all_posts():
 # url coming from client like: posts?category={value}
 
 def get_posts_by_filter(key, value):
-    """""""
+    """
+    filters posts by given key column
+
+    Args:
+        key (str): the column to be filtered on
+        value (str): the search term to check for
+
+    Returns:
+        list: list of dicts of posts
+    """
     # connect to db conn stuff
     # sgl query
         # mostly copies from get all posts to get posts
@@ -222,12 +231,20 @@ def get_posts_by_filter(key, value):
         # from posts
         # join categories
         # join users
-        # join tags
         # where posts.title LIKE ?[%value%]
         # OR categories.label LIKE ?[%value%]
             # options for user
             # OR users.first_name LIKE
             # OR users.last_name LIKE
             # OR users.username LIKE
-        # OR tags.label
+    
+    
+    # sql query searching tags
+        # select columns
+        # from posttags
+        # join posts
+        # join tags
+        
+        # Where tags.label like ?
+    
     return ""
