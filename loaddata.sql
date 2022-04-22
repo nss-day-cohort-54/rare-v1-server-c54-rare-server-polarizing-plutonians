@@ -89,6 +89,7 @@ INSERT INTO Categories ('label') VALUES ('Updates');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Tags ('label') VALUES ('Python');
 INSERT INTO Tags ('label') VALUES ('React');
+INSERT INTO Tags ('label') VALUES ('Al Green');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 INSERT INTO Posts VALUES (null, 1, 1, 'Noob 2', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1);
 INSERT INTO PostTags ('post_id', 'tag_id') VALUES (1, 1);
