@@ -205,3 +205,29 @@ def get_all_posts():
     # use rowcount on db_cursor and store in var
 
     # if rows_affected is 0, return False, else return True
+
+# define function that filters posts
+# needs to be able to filter on keys category, user, title, tag
+# should take a string as value to use for search
+
+# url coming from client like: posts?category={value}
+
+def get_posts_by_filter(key, value):
+    """""""
+    # connect to db conn stuff
+    # sgl query
+        # mostly copies from get all posts to get posts
+        # with category, user, title, tag embeded
+        # select *whatever columns we need*
+        # from posts
+        # join categories
+        # join users
+        # join tags
+        # where posts.title LIKE ?[%value%]
+        # OR categories.label LIKE ?[%value%]
+            # options for user
+            # OR users.first_name LIKE
+            # OR users.last_name LIKE
+            # OR users.username LIKE
+        # OR tags.label
+    return ""
