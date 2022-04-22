@@ -85,16 +85,23 @@ CREATE TABLE "Categories" (
 );
 
 INSERT INTO Categories ('label') VALUES ('News');
+INSERT INTO Categories ('label') VALUES ('Updates');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Tags ('label') VALUES ('Python');
 INSERT INTO Tags ('label') VALUES ('React');
+INSERT INTO Tags ('label') VALUES ('Al Green');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
-INSERT INTO Posts VALUES (null, 1, 1, 'Noob 2', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1)
+INSERT INTO Posts VALUES (null, 1, 1, 'Noob 2', "2022-04-20", "", "I am still new, but a software developer nonetheless.", 1);
 INSERT INTO PostTags ('post_id', 'tag_id') VALUES (1, 1);
 INSERT INTO PostTags ('post_id', 'tag_id') VALUES (1, 2);
 INSERT INTO PostTags ('post_id', 'tag_id') VALUES (2, 2);
 INSERT INTO PostTags ('post_id', 'tag_id') VALUES (2, 3);
+INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (1, 2, "2022-04-20");
+INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (2, 3, "2022-04-20");
+INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (3, 4, "2022-04-20");
+INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (4, 1, "2022-04-20");
 
+INSERT INTO Comments ('post_id', 'author_id', 'content') VALUES (1, 2, "This is a comment");
 
 SELECT
   id,
@@ -105,7 +112,7 @@ SELECT
   image_url,
   content,
   approved
-FROM Posts
+FROM Posts;
 
 -- DROP TABLE Posts
 
@@ -130,13 +137,23 @@ JOIN Categories c
   ON c.id = p.category_id
 JOIN Users u
   ON u.id = p.user_id
-WHERE t.label LIKE "%py%"
+WHERE t.label LIKE "%py%";
 
 
 SELECT
-
+    posts.title
 FROM Posts p
 JOIN Categories c
   ON c.id = p.category_id
 JOIN Users u
-  ON u.id = p.user_id
+  ON u.id = p.user_id;
+
+
+-- test for get_all_users
+SELECT
+  u.username,
+  u.first_name,
+  u.last_name,
+  u.email
+FROM users u
+ORDER BY u.username ASC
