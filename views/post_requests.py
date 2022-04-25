@@ -3,6 +3,7 @@ import json
 from models.post import Post
 from models.category import Category
 from models.user import User
+from models.tag import Tag
 
 
 def get_all_posts():
@@ -57,30 +58,30 @@ def get_all_posts():
 
             post = Post(
                 row['id'],
-                row['user_id'],
-                row['category_id'],
+                row['userId'],
+                row['categoryId'],
                 row['title'],
-                row['publication_date'],
-                row['image_url'],
+                row['publicationDate'],
+                row['imageUrl'],
                 row['content'],
                 row['approved']
             )
 
             category = Category(
-                row['category_id'],
-                row['category_label']
+                row['categoryId'],
+                row['categoryLabel']
             )
 
             user = User(
-                row['user_id'],
-                row['first_name'],
-                row['last_name'],
+                row['userId'],
+                row['firstName'],
+                row['lastName'],
                 row['email'],
                 row['bio'],
                 row['username'],
                 row['password'],
-                row['profile_image_url'],
-                row['created_on'],
+                row['profile_imageUrl'],
+                row['createdOn'],
                 row['active']
             )
 
@@ -89,28 +90,28 @@ def get_all_posts():
             post.user = user.__dict__
 
             # TAG CODE
-            # db_cursor.execute("""
-            # SELECT
-            #     t.id,
-            #     t.name
-            # FROM Entry e
-            # JOIN Entrytags et
-            #     ON e.id = et.entry_id
-            # JOIN Tags t
-            #     ON t.id = et.tag_id
-            # WHERE e.id = ?
-            # """, (entry.id, )
-            # )
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.name
+            FROM Posts p
+            JOIN PostTags pt
+                ON p.id = pt.post_id
+            JOIN Tags t
+                ON t.id = pt.tag_id
+            WHERE e.id = ?
+            """, (post.id, )
+            )
 
-            # tag_list = db_cursor.fetchall()
+            tag_list = db_cursor.fetchall()
 
-            # for et_row in tag_list:
-            #     tag = Tag(
-            #         et_row['id'],
-            #         et_row['name']
-            #     )
+            for pt_row in tag_list:
+                tag = Tag(
+                    pt_row['id'],
+                    pt_row['name']
+                )
 
-            #     entry.tags.append(tag.__dict__)
+                post.tags.append(tag.__dict__)
 
             # Store Category Class and User Class with
             # relevant rows of keys
@@ -137,15 +138,9 @@ def get_posts_by_user_id(id):
             p.category_id,
             p.title,
             p.publication_date,
+            p.image_url,
             p.content,
-            u.first_name,
-            u.last_name,
-            u.email,
-            u.bio,
-            u.username,
-            u.password,
-            u.created_on,
-            u.active,
+            p.approved,
             c.label
         FROM Posts p
         JOIN Users u
@@ -154,24 +149,48 @@ def get_posts_by_user_id(id):
             ON c.id = p.category_id
         WHERE p.user_id = ?
         """, (id,))
-
         posts = []
         dataset = db_cursor.fetchall()
         for row in dataset:
-            post = Post(row['id'], row['user_id'], row['category_id'],
-                        row['title'], row['publication_date'], row['content'])
-            user = User(row['user_id'], row['first_name'], row['last_name'], row['email'],
-                        row['bio'], row['username'], row['password'], row['created_on'], row['active'])
-            category = Category(row['category_id'], row['label'])
+            post = Post(
+                row['id'],
+                row['user_id'],
+                row['category_id'],
+                row['title'],
+                row['publication_date'],
+                row['image_url'],
+                row['content'],
+                row['approved']
+            )
+            # user = User(
+            #     row['user_id'],
+            #     row['first_name'],
+            #     row['last_name'],
+            #     row['email'],
+            #     row['bio'],
+            #     row['username'],
+            #     row['password'],
+            #     row['profile_image_url'],
+            #     row['created_on'],
+            #     row['active']
+            # )
+            category = Category(
+                row['category_id'],
+                row['label']
+            )
 
-            post.user = user.__dict__
+            # post.user = user.__dict__
             post.category = category.__dict__
-            posts.append(post.__dict__)
 
             db_cursor.execute("""
-                SELECT t.id, t.label, pt.tag_id, pt.post_id
+                SELECT
+                t.id,
+                t.label,
+                pt.tag_id,
+                pt.post_id
                 FROM PostTags pt
-                JOIN tags t ON t.id = pt.tag_id
+                JOIN Tags t 
+                    ON t.id = pt.tag_id
                 WHERE pt.post_id = ?
             """, (post.id, ))
 
@@ -180,9 +199,16 @@ def get_posts_by_user_id(id):
             tag_dataset = db_cursor.fetchall()
 
             for tag_row in tag_dataset:
-                tags.append(tag_row['label'])
+                tag = Tag(
+                    tag_row['tag_id'],
+                    tag_row['label']
+                )
+
+                tags.append(tag.__dict__)
 
             post.tags = tags
+
+            posts.append(post.__dict__)
 
     return json.dumps(posts)
 #     """
@@ -216,6 +242,55 @@ def get_posts_by_user_id(id):
 # define function to get a single post, this will
 # take need a parameter to take a post UID later
 
+
+# def get_single_post(id):
+#     with sqlite3.connect("./db.sqlite3") as conn:
+#         conn.row_factory = sqlite3.Row
+#         db_cursor = conn.cursor()
+
+#         db_cursor.execute("""
+#         SELECT
+#             p.id,
+#             p.user_id,
+#             p.category_id,
+#             p.title,
+#             p.publication_date,
+#             p.image_url,
+#             p.content,
+#             p.approved,
+#             u.first_name,
+#             u.last_name,
+#             u.email,
+#             u.bio,
+#             u.username,
+#             u.password,
+#             u.created_on,
+#             u.active,
+#             c.label
+#         FROM Posts p
+#         JOIN Users u
+#             ON u.id = p.user_id
+#         JOIN Categories c
+#             ON c.id = p.category_id
+#         WHERE p.id = ?
+#         """, (id, ))
+
+#         data = db_cursor.fetchone()
+
+#         post = Post(
+#             data['id'],
+#             data['user_id'],
+#             data['category_id'], data['title'], data['publication_date'], data['content'])
+
+#         user = User(data['user_id'], data['first_name'], data['last_name'], data['email'],
+#                     data['bio'], data['username'], data['password'], data['created_on'], data['active'])
+
+#         category = Category(data['category_id'], data['label'])
+
+#         post.user = user.__dict__
+#         post.category = category.__dict__
+
+#     return json.dumps(post.__dict__)
     # connect to database and store in var, set to use rows for db,
     # user cursor method on conn
 
