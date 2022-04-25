@@ -220,7 +220,7 @@ def get_all_posts():
 # should take a string as value to use for search
 
 # url coming from client like: posts?category={value}&title="t"
-                                    # {category: ..., title: ...}
+    # {category: ..., title: ...}
 
 def get_posts_by_filter(url_dict):
     """
@@ -239,26 +239,60 @@ def get_posts_by_filter(url_dict):
     # python stuff ..
     # db_cursor.execute(sqlstmt)
     # sgl query
-        # mostly copies from get all posts to get posts
-        # with category, user, title, tag embedded
-        # select *whatever columns we need*
-        # from posts
-        # join categories
-        # join users
-        # where ?[%key%] LIKE ?[%value%]
-        # OR categories.label LIKE ?[%value%]
-            # options for user
-            # OR users.first_name LIKE
-            # OR users.last_name LIKE
-            # OR users.username LIKE
-
+    # mostly copies from get all posts to get posts
+    # with category, user, title, tag embedded
+    # select *whatever columns we need*
+    # from posts
+    # join categories
+    # join users
+    # where ?[%key%] LIKE ?[%value%]
+    # OR categories.label LIKE ?[%value%]
+    # options for user
+    # OR users.first_name LIKE
+    # OR users.last_name LIKE
+    # OR users.username LIKE
 
     # sql query searching tags
-        # select columns
-        # from posttags
-        # join posts
-        # join tags
+    # select columns
+    # from posttags
+    # join posts
+    # join tags
 
-        # Where tags.label like ?
+    # Where tags.label like ?
 
     return ""
+
+# def create_post(new_post):
+#     with sqlite3.connect("./db.sqlite3") as conn:
+#         db_cursor = conn.cursor()
+
+#         db_cursor.execute("""
+#         INSERT INTO Posts
+#             ( user_id, category_id, title, publication_date, image_url, content, approved )
+#         VALUES
+#             ( ?, ?, ?, ?, ?, ?, ? );
+#         """, (
+#             new_post['user_id'],
+#             new_post['category_id'],
+#             new_post['title'],
+#             new_post['publication_date'],
+#             new_post['image_url'],
+#             new_post['content'],
+#             new_post['approved']))
+
+#         id = db_cursor.lastrowid
+
+#         new_post['id'] = id
+
+#       for tag in new_entry['tags']:
+
+            # db_cursor.execute("""
+            # INSERT INTO PostTags
+            #     (post_id, tag_id)
+            # VALUES
+            #     (?,?);
+                
+            #     """, (new_entry['id'], tag)
+            # )
+
+#     return json.dumps(new_post)
