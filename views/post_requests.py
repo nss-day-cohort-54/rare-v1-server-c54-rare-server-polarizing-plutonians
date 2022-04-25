@@ -280,12 +280,30 @@ def get_posts_by_user_id(id):
 #         post = Post(
 #             data['id'],
 #             data['user_id'],
-#             data['category_id'], data['title'], data['publication_date'], data['content'])
+#             data['category_id'],
+#             data['title'],
+#             data['publication_date'],
+#             data['image_url'],
+#             data['content'],
+#             data['approved']
+#             )
 
-#         user = User(data['user_id'], data['first_name'], data['last_name'], data['email'],
-#                     data['bio'], data['username'], data['password'], data['created_on'], data['active'])
+#         user = User(
+#             data['user_id'],
+#             data['first_name'],
+#             data['last_name'],
+#             data['email'],
+#             data['bio'],
+#             data['username'],
+#             data['password'],
+#             data['created_on'],
+#             data['active']
+#             )
 
-#         category = Category(data['category_id'], data['label'])
+#         category = Category(
+#             data['category_id'],
+#             data['label']
+#             )
 
 #         post.user = user.__dict__
 #         post.category = category.__dict__
