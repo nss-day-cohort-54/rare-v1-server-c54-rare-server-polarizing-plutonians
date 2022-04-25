@@ -1,8 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+
 from views import get_all_posts
-from views import get_all_tags
+from views import get_all_users
+from views import get_all_tags, create_new_tag
+
 
 from views import create_user, get_all_users, get_single_user, login_user
 
@@ -125,11 +128,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = login_user(post_body)
         if resource == 'register':
             response = create_user(post_body)
+        if resource == 'tags':
+            response = create_new_tag(post_body)
 
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(f"{response}".encode())
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
