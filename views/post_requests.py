@@ -58,30 +58,30 @@ def get_all_posts():
 
             post = Post(
                 row['id'],
-                row['userId'],
-                row['categoryId'],
+                row['user_id'],
+                row['category_id'],
                 row['title'],
-                row['publicationDate'],
-                row['imageUrl'],
+                row['publication_date'],
+                row['image_url'],
                 row['content'],
                 row['approved']
             )
 
             category = Category(
-                row['categoryId'],
-                row['categoryLabel']
+                row['category_id'],
+                row['category_label']
             )
 
             user = User(
-                row['userId'],
-                row['firstName'],
-                row['lastName'],
+                row['user_id'],
+                row['first_name'],
+                row['last_name'],
                 row['email'],
                 row['bio'],
                 row['username'],
                 row['password'],
-                row['profile_imageUrl'],
-                row['createdOn'],
+                row['profile_image_url'],
+                row['created_on'],
                 row['active']
             )
 
@@ -125,7 +125,6 @@ def get_all_posts():
 # function to get posts by single user
 
 
-# def get_posts_by_user_id(user_id):
 def get_posts_by_user_id(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -150,8 +149,11 @@ def get_posts_by_user_id(id):
         WHERE p.user_id = ?
         """, (id,))
         posts = []
+#       iterate over dataset
+
         dataset = db_cursor.fetchall()
         for row in dataset:
+            #         # for each one make into a Post() object
             post = Post(
                 row['id'],
                 row['user_id'],
@@ -162,24 +164,13 @@ def get_posts_by_user_id(id):
                 row['content'],
                 row['approved']
             )
-            # user = User(
-            #     row['user_id'],
-            #     row['first_name'],
-            #     row['last_name'],
-            #     row['email'],
-            #     row['bio'],
-            #     row['username'],
-            #     row['password'],
-            #     row['profile_image_url'],
-            #     row['created_on'],
-            #     row['active']
-            # )
+
             category = Category(
                 row['category_id'],
                 row['label']
             )
 
-            # post.user = user.__dict__
+            # add category to
             post.category = category.__dict__
 
             db_cursor.execute("""
@@ -208,11 +199,12 @@ def get_posts_by_user_id(id):
 
             post.tags = tags
 
+#         # append post.__dict__ to posts
             posts.append(post.__dict__)
 
+#     return json.dumps(posts)
     return json.dumps(posts)
-#     """
-#     get list of posts by a single user
+
 
 #     Args:
 #         user_id (int): user id of the author
@@ -233,11 +225,6 @@ def get_posts_by_user_id(id):
 
 #         # get dataset from db_cursor
 
-#         # iterate over dataset
-#         # for each one make into a Post() object
-#         # append post.__dict__ to posts
-
-#     return json.dumps(posts)
 
 # define function to get a single post, this will
 # take need a parameter to take a post UID later
