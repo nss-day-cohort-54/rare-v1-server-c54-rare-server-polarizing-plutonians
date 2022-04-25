@@ -1,15 +1,12 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-
-
 from views import get_all_posts
 from views import get_all_users
 from views import get_all_tags, create_new_tag
-
-
 from views import create_user, get_all_users, get_single_user, login_user
 from views import get_all_subscriptions_by_user, create_subscription, delete_subscription
 from views import get_all_categories
+from views.post_requests import get_posts_by_user_id
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -113,7 +110,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "tags":
                 response = f"{get_all_tags()}"
-                
+
             if resource == "categories":
                 response = f"{get_all_categories()}"
 
@@ -121,6 +118,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             (resource, key, value) = parsed
             if key == "follower" and resource == "subscriptions":
                 response = get_all_subscriptions_by_user(value)
+            if key == "user_id" and resource == "posts":
+                response = get_posts_by_user_id(value)
         #     if key == "q" and resource == "entries":
         #         response = get_entry_by_search(value)
 
@@ -164,7 +163,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "subscriptions":
             if id is not None:
                 delete_subscription(id)
-        
+
         self.wfile.write("".encode())
 
 
