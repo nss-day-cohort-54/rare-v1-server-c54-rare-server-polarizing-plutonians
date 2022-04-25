@@ -100,6 +100,12 @@ INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (1, 
 INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (2, 3, "2022-04-20");
 INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (3, 4, "2022-04-20");
 INSERT INTO Subscriptions ('follower_id', 'author_id', 'created_on') VALUES (4, 1, "2022-04-20");
+INSERT INTO Posts VALUES (null, 1, 1, 'Noob 1', "2022-04-25", "", "I am a software developer.", 1);
+
+
+
+
+
 
 INSERT INTO Comments ('post_id', 'author_id', 'content') VALUES (1, 2, "This is a comment");
 
