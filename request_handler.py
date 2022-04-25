@@ -5,6 +5,7 @@ from views import get_all_posts
 from views import get_all_tags
 
 from views import create_user, get_all_users, get_single_user, login_user
+from views.category_requests import get_all_categories
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -103,6 +104,9 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "tags":
                 response = f"{get_all_tags()}"
+                
+            if resource == "categories":
+                response = f"{get_all_categories()}"
 
         # elif len(parsed) == 3:
         #     (resource, key, value) = parsed
