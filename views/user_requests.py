@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from datetime import datetime
+from models.post import Post
 
 from models.user import User
 
@@ -115,3 +116,70 @@ def get_all_users():
 
     # return new list
     return json.dumps(users)
+
+
+def get_single_user(user_id):
+    """
+    get single user in database
+    """
+    # set up sqlite3 connection to database
+    with sqlite3.connect('./db.sqlite3') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # db_cursor.execute sqlite3 SELECT query
+            # select
+                # list out the user column headers
+                # need first and last name, username, and email for issue #40
+            # from users s
+        # filter for user id
+        db_cursor.execute("""
+            SELECT
+                u.id,
+                u.username,
+                u.first_name,
+                u.last_name,
+                u.email,
+                u.bio,
+                u.profile_image_url,
+                u.created_on,
+                u.active
+            FROM users u
+            WHERE u.id = ?
+        """, ( user_id, ))
+
+        data = db_cursor.fetchall()[0]
+
+        rows = data.keys()
+
+        user = User(data['id'], data['first_name'], data['last_name'],data['email'],
+                    data['bio'], data['username'], '', data['profile_image_url'], data['created_on'], data['active'])
+        
+        # get all posts by the user
+        db_cursor.execute("""
+            SELECT
+                p.id,
+                p.user_id,
+                p.category_id,
+                p.title,
+                p.publication_date,
+                p.image_url,
+                p.content,
+                p.approved
+            FROM posts p
+            WHERE p.user_id = ?
+        """, (user_id, ))
+
+        postdata = db_cursor.fetchall()
+        
+        posts = []
+        
+        for row in postdata:
+            post = Post(row['id'], row['user_id'], row['category_id'], row['title'], row['publication_date'],
+                        row['image_url'], row['content'], row['approved'])
+            posts.append(post.__dict__)
+
+        user.posts = posts
+
+    return json.dumps(user.__dict__)
+        
