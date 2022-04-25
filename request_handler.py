@@ -8,6 +8,8 @@ from views import get_all_tags, create_new_tag
 
 
 from views import create_user, get_all_users, get_single_user, login_user
+from views import get_all_subscriptions_by_user, create_subscription, delete_subscription
+from views import get_all_categories
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -97,6 +99,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_user(id)}"
                 else:
                     response = f"{get_all_users()}"
+            # elif resource == "subscriptions":
+            #     if id is not None:
+            #         response = f"{get_all_subscriptions_by_user(id)}"
+                # else:
+                    # response = f"{get_all_users()}"
 
                     # add in an elif statement for if resource == "tags"
                     # to get_all_tags()
@@ -106,10 +113,14 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "tags":
                 response = f"{get_all_tags()}"
+                
+            if resource == "categories":
+                response = f"{get_all_categories()}"
 
-        # elif len(parsed) == 3:
-        #     (resource, key, value) = parsed
-
+        elif len(parsed) == 3:
+            (resource, key, value) = parsed
+            if key == "follower" and resource == "subscriptions":
+                response = get_all_subscriptions_by_user(value)
         #     if key == "q" and resource == "entries":
         #         response = get_entry_by_search(value)
 
@@ -126,11 +137,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == 'login':
             response = login_user(post_body)
-        if resource == 'register':
+        elif resource == 'register':
             response = create_user(post_body)
-        if resource == 'tags':
+        elif resource == 'tags':
             response = create_new_tag(post_body)
-
+        elif resource == 'subscriptions':
+            response = create_subscription(post_body)
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
 
@@ -142,7 +154,18 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         """Handle DELETE Requests"""
-        pass
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "subscriptions":
+            if id is not None:
+                delete_subscription(id)
+        
+        self.wfile.write("".encode())
 
 
 def main():

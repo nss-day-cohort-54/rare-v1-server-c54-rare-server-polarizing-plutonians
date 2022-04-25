@@ -1,6 +1,5 @@
 import sqlite3
 import json
-from datetime import datetime
 from models.post import Post
 from models.category import Category
 from models.user import User
@@ -46,6 +45,8 @@ def get_all_posts():
                 ON c.id = p.category_id
             JOIN Users u
                 ON u.id = p.user_id
+            ORDER BY p.publication_date DESC
+
         """)
 
         posts = []
@@ -124,6 +125,66 @@ def get_all_posts():
 
 
 # def get_posts_by_user_id(user_id):
+def get_posts_by_user_id(id):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.content,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.password,
+            u.created_on,
+            u.active,
+            c.label
+        FROM Posts p
+        JOIN Users u
+            ON u.id = p.user_id
+        JOIN Categories c
+            ON c.id = p.category_id
+        WHERE p.user_id = ?
+        """, (id,))
+
+        posts = []
+        dataset = db_cursor.fetchall()
+        for row in dataset:
+            post = Post(row['id'], row['user_id'], row['category_id'],
+                        row['title'], row['publication_date'], row['content'])
+            user = User(row['user_id'], row['first_name'], row['last_name'], row['email'],
+                        row['bio'], row['username'], row['password'], row['created_on'], row['active'])
+            category = Category(row['category_id'], row['label'])
+
+            post.user = user.__dict__
+            post.category = category.__dict__
+            posts.append(post.__dict__)
+
+            db_cursor.execute("""
+                SELECT t.id, t.label, pt.tag_id, pt.post_id
+                FROM PostTags pt
+                JOIN tags t ON t.id = pt.tag_id
+                WHERE pt.post_id = ?
+            """, (post.id, ))
+
+            tags = []
+
+            tag_dataset = db_cursor.fetchall()
+
+            for tag_row in tag_dataset:
+                tags.append(tag_row['label'])
+
+            post.tags = tags
+
+    return json.dumps(posts)
 #     """
 #     get list of posts by a single user
 
@@ -263,3 +324,63 @@ def get_posts_by_filter(url_dict):
     return ""
 
 
+def create_post(new_post):
+
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Posts
+            ( user_id, category_id, title, publication_date, image_url, content, approved )
+        VALUES
+            ( ?, ?, ?, ?, ?, ?, ? );
+        """, (
+            new_post['userId'],
+            new_post['categoryId'],
+            new_post['title'],
+            new_post['publicationDate'],
+            new_post['imageUrl'],
+            new_post['content'],
+            new_post['approved'])
+        )
+
+        id = db_cursor.lastrowid
+        new_post['id'] = id
+
+        for tag in new_post['tags']:
+
+            db_cursor.execute("""
+            INSERT INTO PostTags
+                (post_id, tag_id)
+            VALUES
+                (?,?);
+                """, (new_post['id'], tag)
+            )
+
+    return json.dumps(new_post)
+
+# def get_posts_by_*(value):
+#     conn stuff, sqlite3.Row, cursor,
+
+#     execute("""
+#         relevant data
+#         relevant data from other table
+#         FROM table
+#         JOIN table
+#             ON the point the right ids match
+#         WHERE relevant key's value is LIKE ?
+#         """, (f"%{value}%")
+
+#     posts = []
+#     dataset = db_cursor.fetchall()
+
+#     for row in dataset
+#         class stored in Variable
+
+#         class stored in variable
+
+#         post.other_class = other_class.__dict__
+
+#         posts.append(post.__dict__)
+
+#     return json.dumps(posts)
