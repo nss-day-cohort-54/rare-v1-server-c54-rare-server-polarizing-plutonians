@@ -18,7 +18,7 @@ def get_all_tags():
             t.id,
             t.label
         FROM Tags t
-        ORDER BY label ASC
+        ORDER BY label COLLATE NOCASE ASC
         """)
 
         tags = []
@@ -35,16 +35,30 @@ def get_all_tags():
 
 
 # define a new function, create_new_tag which accepts one parameter, "new_tag"
+def create_new_tag(new_tag):
+    """_summary_
 
+    Args:
+        new_tag (_type_): _description_
+    """
     # docstring
 
     # connect to the database
-
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
     # set db_cursor equal to conn.cursor() 
 
-    # write sql block which inserts into the "Tags" table, (label) 
+    # write sql block which inserts into the "Tags" table, (label)
+        db_cursor.execute("""
+    INSERT INTO Tags
+        ( label )
+    VALUES
+        ( ? );
+    """, (new_tag['label'], ))
 # VALUES 
     # add one binding ? for the incoming value, 
         # (new_tag)['label']
-
-        # return json.dumps(new_tag) 
+        id = db_cursor.lastrowid
+        new_tag["id"] = id
+        # return json.dumps(new_tag)
+    return json.dumps(new_tag)

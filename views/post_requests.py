@@ -262,37 +262,4 @@ def get_posts_by_filter(url_dict):
 
     return ""
 
-# def create_post(new_post):
-#     with sqlite3.connect("./db.sqlite3") as conn:
-#         db_cursor = conn.cursor()
 
-#         db_cursor.execute("""
-#         INSERT INTO Posts
-#             ( user_id, category_id, title, publication_date, image_url, content, approved )
-#         VALUES
-#             ( ?, ?, ?, ?, ?, ?, ? );
-#         """, (
-#             new_post['user_id'],
-#             new_post['category_id'],
-#             new_post['title'],
-#             new_post['publication_date'],
-#             new_post['image_url'],
-#             new_post['content'],
-#             new_post['approved']))
-
-#         id = db_cursor.lastrowid
-
-#         new_post['id'] = id
-
-#       for tag in new_entry['tags']:
-
-            # db_cursor.execute("""
-            # INSERT INTO PostTags
-            #     (post_id, tag_id)
-            # VALUES
-            #     (?,?);
-                
-            #     """, (new_entry['id'], tag)
-            # )
-
-#     return json.dumps(new_post)
