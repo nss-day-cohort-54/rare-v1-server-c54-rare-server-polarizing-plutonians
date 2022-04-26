@@ -6,7 +6,11 @@ from views import get_all_tags, create_new_tag
 from views import create_user, get_all_users, get_single_user, login_user
 from views import get_all_subscriptions_by_user, create_subscription, delete_subscription
 from views import get_all_categories
-from views import get_posts_by_user_id
+from views import create_post, get_posts_by_user_id
+from views import get_single_post
+from views import edit_post
+from views import delete_post
+from views import get_posts_by_title
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -88,7 +92,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "posts":
                 if id is not None:
-                    pass  # response = f"{get_single_entry(id)}"
+                    response = f"{get_single_post(id)}"
                 else:
                     response = f"{get_all_posts()}"
             elif resource == "users":
@@ -120,6 +124,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_all_subscriptions_by_user(value)
             if key == "user_id" and resource == "posts":
                 response = get_posts_by_user_id(value)
+            if key == "title" and resource == "posts":
+                response = get_posts_by_title(value)
         #     if key == "q" and resource == "entries":
         #         response = get_entry_by_search(value)
 
@@ -142,6 +148,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_new_tag(post_body)
         elif resource == 'subscriptions':
             response = create_subscription(post_body)
+        elif resource == 'posts':
+            response = create_post(post_body)
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
 
@@ -149,7 +157,24 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         """Handles PUT requests to the server"""
-        pass
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+
+        if resource == "posts":
+            success = edit_post(id, post_body)
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         """Handle DELETE Requests"""
@@ -163,6 +188,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "subscriptions":
             if id is not None:
                 delete_subscription(id)
+        if resource == 'posts':
+            if id is not None:
+                delete_post(id)
 
         self.wfile.write("".encode())
 
