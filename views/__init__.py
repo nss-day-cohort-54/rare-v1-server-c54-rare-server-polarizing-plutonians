@@ -1,4 +1,4 @@
-from .post_requests import get_all_posts
+from .post_requests import get_all_posts, get_posts_by_user_id
 #from views.category_requests import get_all_categories
 
 from .tag_requests import get_all_tags, create_new_tag

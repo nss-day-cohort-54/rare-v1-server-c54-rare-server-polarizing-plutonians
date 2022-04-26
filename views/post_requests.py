@@ -93,13 +93,13 @@ def get_all_posts():
             db_cursor.execute("""
             SELECT
                 t.id,
-                t.name
+                t.label
             FROM Posts p
             JOIN PostTags pt
                 ON p.id = pt.post_id
             JOIN Tags t
                 ON t.id = pt.tag_id
-            WHERE e.id = ?
+            WHERE p.id = ?
             """, (post.id, )
             )
 
@@ -108,7 +108,7 @@ def get_all_posts():
             for pt_row in tag_list:
                 tag = Tag(
                     pt_row['id'],
-                    pt_row['name']
+                    pt_row['label']
                 )
 
                 post.tags.append(tag.__dict__)
