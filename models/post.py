@@ -1,12 +1,13 @@
 class Post():
     def __init__(self, id, user_id, category_id, title, publication_date, image_url, content, approved):
         self.id = id
-        self.user_id = user_id
-        self.category_id = category_id
+        self.userId = user_id
+        self.categoryId = category_id
         self.title = title
-        self.publication_date = publication_date
-        self.image_url = image_url
+        self.publicationDate = publication_date
+        self.imageUrl = image_url
         self.content = content
         self.approved = approved
         self.category = None
         self.user = None
+        self.tags = []
