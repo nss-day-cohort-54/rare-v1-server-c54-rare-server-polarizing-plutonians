@@ -125,6 +125,9 @@ def get_all_posts():
 
 
 def get_posts_by_user_id(id):
+    """
+    gets all posts by single user
+    """
     # CODE COMPLETE
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -140,7 +143,10 @@ def get_posts_by_user_id(id):
             p.image_url,
             p.content,
             p.approved,
-            c.label
+            c.label,
+            u.first_name,
+            u.last_name,
+            u.username
         FROM Posts p
         JOIN Users u
             ON u.id = p.user_id
@@ -164,6 +170,12 @@ def get_posts_by_user_id(id):
                 row['content'],
                 row['approved']
             )
+            
+            user = User(row['user_id'], row['first_name'],
+                        row['last_name'], "", "", row['username'],
+                        "", "", "", "")
+
+            post.user = user.__dict__
 
             category = Category(
                 row['category_id'],
@@ -232,6 +244,9 @@ def get_posts_by_user_id(id):
 
 
 def get_posts_by_title(title_string):
+    """
+    gets posts with the title_string in the post title
+    """
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -305,6 +320,9 @@ def get_posts_by_title(title_string):
 
 
 def get_single_post(id):
+    """
+    gets a single post matching the given id
+    """
     # connect to database and store in var, set to use rows for db,
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -383,7 +401,9 @@ def get_single_post(id):
 
 
 def edit_post(id, edited_post):
-
+    """
+    updates post with given id with the given edited_post data
+    """
     # connect to db and store in conn
     with sqlite3.connect("./db.sqlite3") as conn:
 
@@ -471,6 +491,9 @@ def get_posts_by_filter(url_dict):
 
 
 def create_post(new_post):
+    """
+    adds new post with given new_post information
+    """
 
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
@@ -518,6 +541,9 @@ def create_post(new_post):
 
 
 def delete_post(id):
+    """
+    deletes post with given id
+    """
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 

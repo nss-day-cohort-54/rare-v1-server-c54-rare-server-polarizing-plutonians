@@ -6,9 +6,9 @@ from views import get_posts_by_user_id
 
 def get_all_subscriptions_by_user(user_id):
     """
-    gets the subscription relationships 
+    gets the subscription relationships
     where the user id is the subber NOT the author
- 
+
     Args:
         userId (int)): user_id of the person subscribed
     """
@@ -16,9 +16,9 @@ def get_all_subscriptions_by_user(user_id):
     with sqlite3.connect('./db.sqlite3') as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        
+
         # db_cursor.execute sqlite3 SELECT query
-            # select 
+            # select
                 # follower_id
                 # author_id
                 # created_on -- is this needed for anything?
@@ -34,7 +34,7 @@ def get_all_subscriptions_by_user(user_id):
             FROM Subscriptions s
             WHERE s.follower_id = ?
         """, (user_id, ))
-        
+
         dataset = db_cursor.fetchall()
         # initialize empty list for subscriptions
         subscriptions = []
@@ -42,13 +42,13 @@ def get_all_subscriptions_by_user(user_id):
         for row in dataset:
             subscription = Subscription(row['id'], row['follower_id'],
                                         row['author_id'], row['created_on'])
-            
+
             #subscription.posts = get_posts_by_user_id(row['author_id'])
             subscription.posts = json.loads(get_posts_by_user_id(row['author_id']))
-            
+
             # append the data as a Subscription object to the new list
             subscriptions.append(subscription.__dict__)
-            
+
     # return new list
     return json.dumps(subscriptions)
 
@@ -111,5 +111,5 @@ def delete_subscription(subscription_id):
             DELETE FROM Subscriptions
             WHERE id = ?    
         """, (subscription_id, ))
-    
+
     # doesn't need to return anything
