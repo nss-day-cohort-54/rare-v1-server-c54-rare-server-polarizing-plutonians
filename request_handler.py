@@ -12,6 +12,8 @@ from views import edit_post
 from views import delete_post
 from views import get_posts_by_title
 
+from views import get_comments_for_post, create_comment, delete_comment
+
 
 class HandleRequests(BaseHTTPRequestHandler):
     """Handles the requests to this server"""
@@ -126,6 +128,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user_id(value)
             if key == "title" and resource == "posts":
                 response = get_posts_by_title(value)
+            if key == "post" and resource == "comments":
+                response = get_comments_for_post(value)
         #     if key == "q" and resource == "entries":
         #         response = get_entry_by_search(value)
 
@@ -152,6 +156,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_new_category(post_body)
         elif resource == 'posts':
             response = create_post(post_body)
+        elif resource == 'comments':
+            response = create_comment(post_body)
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
 
@@ -193,6 +199,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'posts':
             if id is not None:
                 delete_post(id)
+        if resource == 'comments':
+            if id is not None:
+                delete_comment(id)
 
         self.wfile.write("".encode())
 

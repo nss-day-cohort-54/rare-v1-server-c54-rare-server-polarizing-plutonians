@@ -13,3 +13,5 @@ from .user_requests import get_all_users, get_single_user, login_user, create_us
 from .subscription_requests import get_all_subscriptions_by_user, create_subscription, delete_subscription
 from .category_requests import get_all_categories, create_new_category
 
+from .comment_requests import get_comments_for_post, create_comment, delete_comment
+
