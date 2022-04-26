@@ -9,7 +9,7 @@ from views import get_all_tags, create_new_tag
 
 from views import create_user, get_all_users, get_single_user, login_user
 from views import get_all_subscriptions_by_user, create_subscription, delete_subscription
-from views import get_all_categories
+from views import get_all_categories, create_new_category
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -143,6 +143,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_new_tag(post_body)
         elif resource == 'subscriptions':
             response = create_subscription(post_body)
+        elif resource == 'categories':
+            response = create_new_category(post_body)
             # write a new if statement for if resource = "tags"
             # new_tag = create_new_tag(post_body)
 

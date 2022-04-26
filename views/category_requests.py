@@ -75,3 +75,26 @@ def get_all_categories():
     # new_category['id'] = id
 
     # return json.dumps(new_category)
+    
+# define a new function, create_new_tag which accepts one parameter, "new_tag"
+def create_new_category(new_category):
+    
+    # connect to the database
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+    # set db_cursor equal to conn.cursor() 
+
+    # write sql block which inserts into the "Category" table, (label)
+        db_cursor.execute("""
+    INSERT INTO Categories
+        ( label )
+    VALUES
+        ( ? );
+    """, (new_category['label'], ))
+# VALUES 
+    # add one binding ? for the incoming value, 
+        # (new_category)['label']
+        id = db_cursor.lastrowid
+        new_category["id"] = id
+        # return json.dumps(new_category)
+    return json.dumps(new_category)
