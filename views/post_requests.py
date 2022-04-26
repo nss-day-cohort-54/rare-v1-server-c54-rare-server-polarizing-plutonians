@@ -38,7 +38,6 @@ def get_all_posts():
                 u.email,
                 u.bio,
                 u.username,
-                u.password,
                 u.profile_image_url,
                 u.created_on,
                 u.active
@@ -80,7 +79,7 @@ def get_all_posts():
                 row['email'],
                 row['bio'],
                 row['username'],
-                row['password'],
+                "",
                 row['profile_image_url'],
                 row['created_on'],
                 row['active']
@@ -242,7 +241,6 @@ def get_posts_by_title(title_string):
             u.email,
             u.bio,
             u.username,
-            u.password,
             u.profile_image_url,
             u.created_on,
             u.active,
@@ -277,7 +275,7 @@ def get_posts_by_title(title_string):
                 row['email'],
                 row['bio'],
                 row['username'],
-                row['password'],
+                "",
                 row['profile_image_url'],
                 row['created_on'],
                 row['active']
@@ -356,7 +354,7 @@ def get_single_post(id):
             data['email'],
             data['bio'],
             data['username'],
-            data['password'],
+            "",
             data['profile_image_url'],
             data['created_on'],
             data['active']
@@ -366,6 +364,32 @@ def get_single_post(id):
             data['category_id'],
             data['label']
         )
+
+        db_cursor.execute("""
+            SELECT
+            t.id,
+            t.label,
+            pt.tag_id,
+            pt.post_id
+            FROM PostTags pt
+            JOIN Tags t 
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+        """, (post.id, ))
+
+        tags = []
+
+        tag_dataset = db_cursor.fetchall()
+
+        for tag_row in tag_dataset:
+            tag = Tag(
+                tag_row['tag_id'],
+                tag_row['label']
+            )
+
+            tags.append(tag.__dict__)
+
+        post.tags = tags
 
         # change classes into dictionaries and attach to post
         # i.e. post.author = author.__dict__
