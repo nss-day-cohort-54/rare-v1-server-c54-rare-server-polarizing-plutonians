@@ -94,13 +94,13 @@ def get_all_posts():
             db_cursor.execute("""
             SELECT
                 t.id,
-                t.name
+                t.label
             FROM Posts p
             JOIN PostTags pt
                 ON p.id = pt.post_id
             JOIN Tags t
                 ON t.id = pt.tag_id
-            WHERE e.id = ?
+            WHERE p.id = ?
             """, (post.id, )
             )
 
@@ -109,7 +109,7 @@ def get_all_posts():
             for pt_row in tag_list:
                 tag = Tag(
                     pt_row['id'],
-                    pt_row['name']
+                    pt_row['label']
                 )
 
                 post.tags.append(tag.__dict__)
@@ -205,6 +205,31 @@ def get_posts_by_user_id(id):
 #     return json.dumps(posts)
     return json.dumps(posts)
 
+    #     p.id,
+    #     p.user_id,
+    #     p.category_id,
+    #     p.title,
+    #     p.publication_date,
+    #     p.image_url,
+    #     p.content,
+    #     p.approved,
+    #     u.first_name,
+    #     u.last_name,
+    #     u.email,
+    #     u.bio,
+    #     u.username,
+    #     u.password,
+    #     u.profile_image_url,
+    #     u.created_on,
+    #     u.active,
+    #     c.label
+    # FROM Posts p
+    # JOIN Users u
+    #     ON u.id = p.user_id
+    # JOIN Categories c
+    #     ON c.id = p.category_id
+    # WHERE p.title = ?
+
 
 def get_posts_by_title(title_string):
     with sqlite3.connect("./db.sqlite3") as conn:
@@ -236,7 +261,7 @@ def get_posts_by_title(title_string):
             ON u.id = p.user_id
         JOIN Categories c
             ON c.id = p.category_id
-        WHERE p.title = ?
+        WHERE p.title LIKE ?
         """, (f"%{title_string}%", ))
 
         posts = []
@@ -271,10 +296,11 @@ def get_posts_by_title(title_string):
                 row['category_id'],
                 row['label']
             )
-
             post.user = user.__dict__
             post.category = category.__dict__
+
             posts.append(post.__dict__)
+
     return json.dumps(posts)
 
 
