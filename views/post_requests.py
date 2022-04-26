@@ -288,7 +288,33 @@ def get_posts_by_title(title_string):
             post.user = user.__dict__
             post.category = category.__dict__
 
-            posts.append(post.__dict__)
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label,
+                pt.tag_id,
+                pt.post_id
+            FROM PostTags pt
+            JOIN Tags t 
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+        """, (post.id, ))
+
+        tags = []
+
+        tag_dataset = db_cursor.fetchall()
+
+        for tag_row in tag_dataset:
+            tag = Tag(
+                tag_row['tag_id'],
+                tag_row['label']
+            )
+
+            tags.append(tag.__dict__)
+
+        post.tags = tags
+
+        posts.append(post.__dict__)
 
     return json.dumps(posts)
 
@@ -447,47 +473,6 @@ def edit_post(id, edited_post):
     else:
         # Forces 204 header response by main module
         return True
-
-
-def get_posts_by_filter(url_dict):
-    """
-    filters posts by given key column
-
-    Args:
-        key (str): the column to be filtered on
-        value (str): the search term to check for
-
-    Returns:
-        list: list of dicts of posts
-    """
-    # connect to db conn stuff
-    # sqlstmt = ""
-    # if "category" in url_dict:
-    # python stuff ..
-    # db_cursor.execute(sqlstmt)
-    # sgl query
-    # mostly copies from get all posts to get posts
-    # with category, user, title, tag embedded
-    # select *whatever columns we need*
-    # from posts
-    # join categories
-    # join users
-    # where ?[%key%] LIKE ?[%value%]
-    # OR categories.label LIKE ?[%value%]
-    # options for user
-    # OR users.first_name LIKE
-    # OR users.last_name LIKE
-    # OR users.username LIKE
-
-    # sql query searching tags
-    # select columns
-    # from posttags
-    # join posts
-    # join tags
-
-    # Where tags.label like ?
-
-    return ""
 
 
 def create_post(new_post):
