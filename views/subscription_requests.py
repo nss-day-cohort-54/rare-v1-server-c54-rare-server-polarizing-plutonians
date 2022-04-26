@@ -2,6 +2,7 @@ import sqlite3
 import json
 
 from models import Subscription
+from views import get_posts_by_user_id
 
 def get_all_subscriptions_by_user(user_id):
     """
@@ -41,6 +42,10 @@ def get_all_subscriptions_by_user(user_id):
         for row in dataset:
             subscription = Subscription(row['id'], row['follower_id'],
                                         row['author_id'], row['created_on'])
+            
+            #subscription.posts = get_posts_by_user_id(row['author_id'])
+            subscription.posts = json.loads(get_posts_by_user_id(row['author_id']))
+            
             # append the data as a Subscription object to the new list
             subscriptions.append(subscription.__dict__)
             
