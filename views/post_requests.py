@@ -298,23 +298,23 @@ def get_posts_by_title(title_string):
             JOIN Tags t 
                 ON t.id = pt.tag_id
             WHERE pt.post_id = ?
-        """, (post.id, ))
+            """, (post.id, ))
 
-        tags = []
+            tags = []
 
-        tag_dataset = db_cursor.fetchall()
+            tag_dataset = db_cursor.fetchall()
 
-        for tag_row in tag_dataset:
-            tag = Tag(
-                tag_row['tag_id'],
-                tag_row['label']
-            )
+            for tag_row in tag_dataset:
+                tag = Tag(
+                    tag_row['tag_id'],
+                    tag_row['label']
+                )
 
-            tags.append(tag.__dict__)
+                tags.append(tag.__dict__)
 
-        post.tags = tags
+            post.tags = tags
 
-        posts.append(post.__dict__)
+            posts.append(post.__dict__)
 
     return json.dumps(posts)
 
@@ -388,6 +388,32 @@ def get_posts_by_category(category_string):
             )
             post.user = user.__dict__
             post.category = category.__dict__
+            
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label,
+                pt.tag_id,
+                pt.post_id
+            FROM PostTags pt
+            JOIN Tags t 
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+        """, (post.id, ))
+
+            tags = []
+
+            tag_dataset = db_cursor.fetchall()
+
+            for tag_row in tag_dataset:
+                tag = Tag(
+                    tag_row['tag_id'],
+                    tag_row['label']
+                )
+
+                tags.append(tag.__dict__)
+
+            post.tags = tags
 
             posts.append(post.__dict__)
 
