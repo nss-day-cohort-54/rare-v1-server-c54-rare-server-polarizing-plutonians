@@ -13,6 +13,7 @@ from views import delete_post
 from views import get_posts_by_title
 from views import get_comments_for_post, create_comment, delete_comment
 from views import update_tags_for_post
+from views.post_requests import get_posts_by_tag
 
 
 
@@ -133,6 +134,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_category(value)
             if key == "post" and resource == "comments":
                 response = get_comments_for_post(value)
+            if key == "tag_id" and resource == "posts":
+                response = get_posts_by_tag(value)
         #     if key == "q" and resource == "entries":
         #         response = get_entry_by_search(value)
 
