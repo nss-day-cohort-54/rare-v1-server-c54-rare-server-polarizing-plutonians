@@ -413,7 +413,7 @@ def get_posts_by_title(title_string):
     return json.dumps(posts)
 
 
-def get_posts_by_category(category_string):
+def get_posts_by_category(category_id):
     """
     gets posts with the category_string in the post category 
     """
@@ -431,22 +431,17 @@ def get_posts_by_category(category_string):
             p.image_url,
             p.content,
             p.approved,
+            c.label,
             u.first_name,
             u.last_name,
-            u.email,
-            u.bio,
-            u.username,
-            u.profile_image_url,
-            u.created_on,
-            u.active,
-            c.label
+            u.username
         FROM Posts p
         JOIN Users u
             ON u.id = p.user_id
         JOIN Categories c
             ON c.id = p.category_id
-        WHERE c.label LIKE ?
-        """, (f"%{category_string}%", ))
+        WHERE c.id = ?
+        """, (category_id,))
 
         posts = []
         dataset = db_cursor.fetchall()
@@ -464,17 +459,10 @@ def get_posts_by_category(category_string):
             )
 
             user = User(
-                row['user_id'],
-                row['first_name'],
-                row['last_name'],
-                row['email'],
-                row['bio'],
-                row['username'],
-                "",
-                row['profile_image_url'],
-                row['created_on'],
-                row['active']
-            )
+                row['user_id'], row['first_name'],
+                        row['last_name'], "", "", row['username'],
+                        "", "", "", "")
+            
 
             category = Category(
                 row['category_id'],
