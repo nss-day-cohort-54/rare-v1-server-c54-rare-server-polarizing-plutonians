@@ -11,7 +11,6 @@ from views import get_single_post
 from views import edit_post
 from views import delete_post
 from views import get_posts_by_title
-
 from views import get_comments_for_post, create_comment, delete_comment
 
 
