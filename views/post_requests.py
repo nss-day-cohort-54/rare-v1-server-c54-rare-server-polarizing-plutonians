@@ -169,7 +169,7 @@ def get_posts_by_user_id(id):
                 row['content'],
                 row['approved']
             )
-            
+
             user = User(row['user_id'], row['first_name'],
                         row['last_name'], "", "", row['username'],
                         "", "", "", "")
@@ -216,36 +216,12 @@ def get_posts_by_user_id(id):
 #     return json.dumps(posts)
     return json.dumps(posts)
 
-    #     p.id,
-    #     p.user_id,
-    #     p.category_id,
-    #     p.title,
-    #     p.publication_date,
-    #     p.image_url,
-    #     p.content,
-    #     p.approved,
-    #     u.first_name,
-    #     u.last_name,
-    #     u.email,
-    #     u.bio,
-    #     u.username,
-    #     u.password,
-    #     u.profile_image_url,
-    #     u.created_on,
-    #     u.active,
-    #     c.label
-    # FROM Posts p
-    # JOIN Users u
-    #     ON u.id = p.user_id
-    # JOIN Categories c
-    #     ON c.id = p.category_id
-    # WHERE p.title = ?
-
 
 def get_posts_by_title(title_string):
     """
     gets posts with the title_string in the post title
     """
+
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -312,7 +288,33 @@ def get_posts_by_title(title_string):
             post.user = user.__dict__
             post.category = category.__dict__
 
-            posts.append(post.__dict__)
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label,
+                pt.tag_id,
+                pt.post_id
+            FROM PostTags pt
+            JOIN Tags t 
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+        """, (post.id, ))
+
+        tags = []
+
+        tag_dataset = db_cursor.fetchall()
+
+        for tag_row in tag_dataset:
+            tag = Tag(
+                tag_row['tag_id'],
+                tag_row['label']
+            )
+
+            tags.append(tag.__dict__)
+
+        post.tags = tags
+
+        posts.append(post.__dict__)
 
     return json.dumps(posts)
 
@@ -546,47 +548,6 @@ def edit_post(id, edited_post):
     else:
         # Forces 204 header response by main module
         return True
-
-
-def get_posts_by_filter(url_dict):
-    """
-    filters posts by given key column
-
-    Args:
-        key (str): the column to be filtered on
-        value (str): the search term to check for
-
-    Returns:
-        list: list of dicts of posts
-    """
-    # connect to db conn stuff
-    # sqlstmt = ""
-    # if "category" in url_dict:
-    # python stuff ..
-    # db_cursor.execute(sqlstmt)
-    # sgl query
-    # mostly copies from get all posts to get posts
-    # with category, user, title, tag embedded
-    # select *whatever columns we need*
-    # from posts
-    # join categories
-    # join users
-    # where ?[%key%] LIKE ?[%value%]
-    # OR categories.label LIKE ?[%value%]
-    # options for user
-    # OR users.first_name LIKE
-    # OR users.last_name LIKE
-    # OR users.username LIKE
-
-    # sql query searching tags
-    # select columns
-    # from posttags
-    # join posts
-    # join tags
-
-    # Where tags.label like ?
-
-    return ""
 
 
 def create_post(new_post):
