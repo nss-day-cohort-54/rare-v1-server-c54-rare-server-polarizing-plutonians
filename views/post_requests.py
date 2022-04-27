@@ -392,23 +392,112 @@ def get_posts_by_title(title_string):
             JOIN Tags t 
                 ON t.id = pt.tag_id
             WHERE pt.post_id = ?
-        """, (post.id, ))
+            """, (post.id, ))
 
-        tags = []
+            tags = []
 
-        tag_dataset = db_cursor.fetchall()
+            tag_dataset = db_cursor.fetchall()
 
-        for tag_row in tag_dataset:
-            tag = Tag(
-                tag_row['tag_id'],
-                tag_row['label']
+            for tag_row in tag_dataset:
+                tag = Tag(
+                    tag_row['tag_id'],
+                    tag_row['label']
+                )
+
+                tags.append(tag.__dict__)
+
+            post.tags = tags
+
+            posts.append(post.__dict__)
+
+    return json.dumps(posts)
+
+
+def get_posts_by_category(category_id):
+    """
+    gets posts with the category_string in the post category 
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved,
+            c.label,
+            u.first_name,
+            u.last_name,
+            u.username
+        FROM Posts p
+        JOIN Users u
+            ON u.id = p.user_id
+        JOIN Categories c
+            ON c.id = p.category_id
+        WHERE c.id = ?
+        """, (category_id,))
+
+        posts = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(
+                row['id'],
+                row['user_id'],
+                row['category_id'],
+                row['title'],
+                row['publication_date'],
+                row['image_url'],
+                row['content'],
+                row['approved']
             )
 
-            tags.append(tag.__dict__)
+            user = User(
+                row['user_id'], row['first_name'],
+                        row['last_name'], "", "", row['username'],
+                        "", "", "", "")
+            
 
-        post.tags = tags
+            category = Category(
+                row['category_id'],
+                row['label']
+            )
+            post.user = user.__dict__
+            post.category = category.__dict__
+            
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label,
+                pt.tag_id,
+                pt.post_id
+            FROM PostTags pt
+            JOIN Tags t 
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+        """, (post.id, ))
 
-        posts.append(post.__dict__)
+            tags = []
+
+            tag_dataset = db_cursor.fetchall()
+
+            for tag_row in tag_dataset:
+                tag = Tag(
+                    tag_row['tag_id'],
+                    tag_row['label']
+                )
+
+                tags.append(tag.__dict__)
+
+            post.tags = tags
+
+            posts.append(post.__dict__)
 
     return json.dumps(posts)
 
