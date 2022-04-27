@@ -12,6 +12,7 @@ from views import edit_post
 from views import delete_post
 from views import get_posts_by_title
 from views import get_comments_for_post, create_comment, delete_comment
+from views import update_tags_for_post
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -177,6 +178,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = edit_post(id, post_body)
 
         if success:
+            if resource == "posts":
+                update_tags_for_post(post_body)
             self._set_headers(204)
         else:
             self._set_headers(404)
