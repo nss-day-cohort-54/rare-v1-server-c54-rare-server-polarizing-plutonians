@@ -317,6 +317,81 @@ def get_posts_by_title(title_string):
     return json.dumps(posts)
 
 
+def get_posts_by_category(category_string):
+    """
+    gets posts with the category_string in the post category 
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username,
+            u.profile_image_url,
+            u.created_on,
+            u.active,
+            c.label
+        FROM Posts p
+        JOIN Users u
+            ON u.id = p.user_id
+        JOIN Categories c
+            ON c.id = p.category_id
+        WHERE c.label LIKE ?
+        """, (f"%{category_string}%", ))
+
+        posts = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(
+                row['id'],
+                row['user_id'],
+                row['category_id'],
+                row['title'],
+                row['publication_date'],
+                row['image_url'],
+                row['content'],
+                row['approved']
+            )
+
+            user = User(
+                row['user_id'],
+                row['first_name'],
+                row['last_name'],
+                row['email'],
+                row['bio'],
+                row['username'],
+                "",
+                row['profile_image_url'],
+                row['created_on'],
+                row['active']
+            )
+
+            category = Category(
+                row['category_id'],
+                row['label']
+            )
+            post.user = user.__dict__
+            post.category = category.__dict__
+
+            posts.append(post.__dict__)
+
+    return json.dumps(posts)
+
+
 def get_single_post(id):
     """
     gets a single post matching the given id

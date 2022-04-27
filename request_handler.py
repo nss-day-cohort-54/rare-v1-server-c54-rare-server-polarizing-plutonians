@@ -5,7 +5,7 @@ from views import get_all_users
 from views import get_all_tags, create_new_tag
 from views import create_user, get_all_users, get_single_user, login_user
 from views import get_all_subscriptions_by_user, create_subscription, delete_subscription
-from views import get_all_categories, create_new_category
+from views import get_all_categories, create_new_category, get_posts_by_category
 from views import create_post, get_posts_by_user_id
 from views import get_single_post
 from views import edit_post
@@ -13,6 +13,7 @@ from views import delete_post
 from views import get_posts_by_title
 
 from views import get_comments_for_post, create_comment, delete_comment
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -128,6 +129,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_user_id(value)
             if key == "title" and resource == "posts":
                 response = get_posts_by_title(value)
+            if key == "category" and resource == "posts":
+                response = get_posts_by_category(value)
             if key == "post" and resource == "comments":
                 response = get_comments_for_post(value)
         #     if key == "q" and resource == "entries":
